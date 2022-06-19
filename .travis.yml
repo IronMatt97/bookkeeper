@@ -1,0 +1,24 @@
+language: java
+jdk:
+  - openjdk8
+before_install:
+  - pip install --user codecov
+after_success:
+  - codecov
+branches:
+  except:
+    - appveyor
+
+cache:
+  directories:
+  - $HOME/.m2
+  
+addons:
+  sonarcloud:
+    organization: "ironmatt97"
+    token:
+      secure: "dgqLa4GksJ+D8Y5g5TunNjA20/TtcMFLa0kN1aWQ9ELc1FabsE3R1GXb59PcYbb6cuz82B4Ux+s8RnKCo1bVRvQesH5rR+X9q1pwmNwf4RAHBoqeNY+w9gMhqmeZqBm0PXDZ1m3lWXuJVelsSPHW1d2HCa9u53nprJBLFrsSifs7k3QwjQ9A0E62P/Z0uU9hL4pf7yECoeeIVvHuwdAd9ejEY0F9D6P46S2Cp9/2x/UVD4Tx7UjXtwexGcXeYrUh9UdFRP8gZh/spIFjH3ae+ze0kR3c/nX21zpkFJ85JEQbBemoJID+kSpSJxOf+5p5b+ULvMTX9uo5x9eUmvQr2a9O+H/isKo63hgx0EF6Gvx2JL+uUOG3qW3JCPoCHlO9KP+Z6rziMalYEGF1A4vCVAw3urmsdiU0qzsK7WjJydIGb9VET7a2KZ9lKxA3+3nbrFVXu77m5vFg8njDfFQvaHWl92mTuMr0Ptg2okuRzolxri4jW3jB39M8smh3Wif/Mr/mwnkaJJr99VVhCPuHH3/dXPfsww7QBxqEOUUNiWzz5NdSjHiS7wMDfqAxsr9cHhZnrFf+X6UiflSFurnRDO4ly8Mc6FGhwl5CX/xJ+n6O68I2/ex2TDW+do6u7FEBpaghPPhZYDq4YMEVTtUQtohP4nUX9VhrkQwdcKO+1tc="
+
+script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
