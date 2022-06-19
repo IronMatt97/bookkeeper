@@ -90,7 +90,7 @@ allprojects {
         && it.name != 'main') {
         apply plugin: 'java'
         apply plugin: 'maven-publish'
-        apply plugin: 'signing'
+        //apply plugin: 'signing'
         apply plugin: 'org.nosphere.apache.rat'
         apply plugin: "checkstyle"
         apply plugin: 'com.github.spotbugs'
@@ -253,7 +253,7 @@ allprojects {
                 }
             }
         }
-        signing {
+        /*signing {
             def skipSigning = project.hasProperty('skipSigning') && skipSigning.toBoolean()
             def shouldSign = !skipSigning
             if (shouldSign) {
@@ -276,7 +276,7 @@ allprojects {
                 }
                 // Signing task is added by the release plugin
             }
-        }
+        }*/
         test {
             filter {
                 String testGroup = System.properties['testGroup']
