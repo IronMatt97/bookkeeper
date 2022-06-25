@@ -1,6 +1,7 @@
 
 package org.apache.bookkeeper.bookie;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.core.util.Source;
 import org.junit.*;
@@ -126,13 +127,13 @@ public class FileInfoMoveToNewLocationTest {
 
     @BeforeClass
     public static void setUpEnvironment() {
-        // Create the directories if do not exist
+        // Create the directory if not present
         if (!Files.exists(Paths.get("tmp"))) {
             File tmpDir = new File("tmp");
             tmpDir.mkdir();
         }
 
-        // Delete test file if exists
+        // Delete previous file tests if exist
         if (Files.exists(Paths.get("tmp", "file0.log"))) {
             File testFile = new File("tmp", "file0.log");
             testFile.delete();
@@ -141,6 +142,14 @@ public class FileInfoMoveToNewLocationTest {
         if (Files.exists(Paths.get("tmp","file1.log"))) {
             File testFile = new File("tmp", "file1.log");
             testFile.delete();
+        }
+    }
+
+    @AfterClass
+    public static void cleanUpEnvironment() throws IOException {
+        // Delete the directory
+        if (Files.exists(Paths.get("tmp"))) {
+            FileUtils.deleteDirectory(new File("tmp"));
         }
     }
 

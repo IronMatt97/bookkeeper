@@ -387,13 +387,14 @@
         </plugins>
       </build>
     </profile>
-    <profile>
+           <profile>
       <id>data-flow-test</id>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M6</version>
             <executions>
               <execution>
                 <goals>
@@ -403,7 +404,7 @@
             </executions>
             <configuration>
                 <argLine>
-                    -javaagent:/home/matteo/Programmi/Ba-Dua/ba-dua-agent-rt-0.7.0-all.jar
+                    -javaagent:/home/matteo/Programmi/Ba-Dua/ba-dua-agent-rt-0.6.0-all.jar
                 </argLine>
             </configuration>
           </plugin>
