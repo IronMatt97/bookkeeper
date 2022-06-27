@@ -82,6 +82,17 @@ public class BufferedChannelWriteTest {
         bufferedChannel = new BufferedChannel(allocator, fileChannel, writeCapacity);
         inputs.add(new TestInput(fileChannel,bufferedChannel,byteBuf,3));
 
+        /*
+        Test 4 -> Caso di byteBuf nullo
+        Si vogliono scrivere 3 bytes su una capacità di 4, il limite non è proprio definito stavolta.
+         */
+        writeCapacity=4;
+        file = File.createTempFile("test", "log");
+        file.deleteOnExit();
+        fileChannel = new RandomAccessFile(file, "rw").getChannel();
+        bufferedChannel = new BufferedChannel(allocator, fileChannel, writeCapacity);
+        inputs.add(new TestInput(fileChannel,bufferedChannel,null,0));
+
         for (TestInput e : inputs) {
             result.add(new TestInput[] { e });
         }
@@ -97,6 +108,9 @@ public class BufferedChannelWriteTest {
 
     @Test
     public void write_test() throws IOException {
+
+        if (byteBuf == null)
+            thrown.expect(NullPointerException.class);
 
         bufferedChannel.write(this.byteBuf);
         Assert.assertEquals(expectedParam,bufferedChannel.getNumOfBytesInWriteBuffer());

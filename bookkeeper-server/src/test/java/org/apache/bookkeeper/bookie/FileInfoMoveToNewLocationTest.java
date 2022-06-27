@@ -111,6 +111,20 @@ public class FileInfoMoveToNewLocationTest {
         expectedParam = 10L;
         inputs.add(new TestInput(fi,file1,sizeToMove,0L,byteBuffer,expectedParam));
 
+        /*
+        Test 5 e 6 -> Test per file nullo o byteBuffer nullo
+        */
+        file0 = new File("tmp","file0.log");
+        file0.deleteOnExit();
+        fi = new FileInfo(file0,"MasterKey".getBytes(StandardCharsets.UTF_8),FileInfo.V0);
+        byteBuffer = new ByteBuffer[2];
+        byteBuffer[0] = ByteBuffer.wrap("Test0".getBytes(StandardCharsets.UTF_8));
+        byteBuffer[1] = ByteBuffer.wrap("Test1".getBytes(StandardCharsets.UTF_8));
+        sizeToMove= 0;
+        expectedParam = 10L;
+        inputs.add(new TestInput(fi,null,sizeToMove,0L,byteBuffer,expectedParam));
+        inputs.add(new TestInput(fi,file0,sizeToMove,0L,null,expectedParam));
+
         for (TestInput e : inputs) {
             result.add(new TestInput[] { e });
         }

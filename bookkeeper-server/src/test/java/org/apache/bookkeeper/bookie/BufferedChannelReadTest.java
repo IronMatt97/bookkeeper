@@ -11,6 +11,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.internal.matchers.Null;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,6 +106,40 @@ public class BufferedChannelReadTest {
         inputs.add(new TestInput(fileChannel,bufferedChannel,byteBuf,position,length,0));
         */
 
+        /*
+        Test 5 -> Caso di ByteBuf nullo
+        */
+        position = 0; length = 5;
+        file = File.createTempFile("test", "log");
+        file.deleteOnExit();
+        fileChannel = new RandomAccessFile(file, "rw").getChannel();
+        bufferedChannel = new BufferedChannel(allocator, fileChannel, capacity);
+        bufferedChannel.write(byteBuf);
+        inputs.add(new TestInput(fileChannel,bufferedChannel,null,position,length,1));
+
+        /*
+        Test 6 -> caso di position negativa
+        */
+        position = -1; length = 1;
+        file = File.createTempFile("test", "log");
+        file.deleteOnExit();
+        fileChannel = new RandomAccessFile(file, "rw").getChannel();
+        bufferedChannel = new BufferedChannel(allocator, fileChannel, 1,1,0);
+        bufferedChannel.write(byteBuf);
+        inputs.add(new TestInput(fileChannel,bufferedChannel,byteBuf,position,length,0));
+
+        /*
+        Test 7 e 8 -> caso di length e nulla
+        */
+        position = 0;
+        file = File.createTempFile("test", "log");
+        file.deleteOnExit();
+        fileChannel = new RandomAccessFile(file, "rw").getChannel();
+        bufferedChannel = new BufferedChannel(allocator, fileChannel, 1,1,0);
+        bufferedChannel.write(byteBuf);
+        inputs.add(new TestInput(fileChannel,bufferedChannel,byteBuf,position,0,0));
+        inputs.add(new TestInput(fileChannel,bufferedChannel,byteBuf,position,-1,0));
+
         for (TestInput e : inputs) {
             result.add(new TestInput[] { e });
         }
@@ -124,6 +159,10 @@ public class BufferedChannelReadTest {
         //Mi aspetto IOException quando avviene una lettura oltre l'EOF
         if(this.bufferedChannel.readCapacity - this.position<this.length)
             thrown.expect(IOException.class);
+        if (this.byteBuf == null)
+            thrown.expect(NullPointerException.class);
+        if (this.position < 0)
+            thrown.expect(IllegalArgumentException.class);
 
         int read = bufferedChannel.read(this.byteBuf,this.position,this.length);
         Assert.assertEquals(expectedParam,read);
